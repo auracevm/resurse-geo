@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Frame-Options" content="ALLOWALL">
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors *;">
+    <title>Universul și Sistemul Solar - Platformă Educațională</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c1445, #1a237e, #000051);
+            color: white;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2em;
+            background: linear-gradient(45deg, #64b5f6, #42a5f5, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            background: linear-gradient(45deg, #2196f3, #1976d2);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+            background: linear-gradient(45deg, #1976d2, #1565c0);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .theory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .theory-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .theory-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .theory-card h3 {
+            color: #64b5f6;
+            margin-bottom: 12px;
+            font-size: 1.3em;
+        }
+
+        .quiz-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .question h4 {
+            color: #64b5f6;
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .question.critical-thinking {
+            border-left-color: #ff6b35;
+        }
+
+        .question.critical-thinking h4 {
+            color: #ffab91;
+        }
+
+        .question.critical-thinking::before {
+            content: "🧠 GÂNDIRE CRITICĂ: ";
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .options {
+            display: grid;
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .option {
+            padding: 10px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #64b5f6;
+        }
+
+        .option.selected {
+            background: rgba(33, 150, 243, 0.3);
+            border-color: #2196f3;
+        }
+
+        .option.correct {
+            background: rgba(76, 175, 80, 0.3);
+            border-color: #4caf50;
+        }
+
+        .option.incorrect {
+            background: rgba(244, 67, 54, 0.3);
+            border-color: #f44336;
+        }
+
+        .feedback {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 6px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #81c784;
+        }
+
+        .feedback.incorrect {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #e57373;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 8px;
+        }
+
+        .score-display {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #64b5f6;
+        }
+
+        .planet-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .planet-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .planet-card:hover {
+            transform: scale(1.03);
+        }
+
+        .planet-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            background-size: cover;
+            background-position: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .mercury { background-image: radial-gradient(circle, #8c7853, #6b5b47); }
+        .venus { background-image: radial-gradient(circle, #ffc649, #f39c12); }
+        .earth { background-image: radial-gradient(circle, #6bb6ff, #4285f4); }
+        .mars { background-image: radial-gradient(circle, #cd5c5c, #a0522d); }
+        .jupiter { background-image: radial-gradient(circle, #d8ca9d, #bc9a5c); }
+        .saturn { background-image: radial-gradient(circle, #fad5a5, #e6b85c); }
+        .uranus { background-image: radial-gradient(circle, #4fdcf7, #2196f3); }
+        .neptune { background-image: radial-gradient(circle, #4b70dd, #1a237e); }
+
+        .start-quiz-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #4caf50, #45a049);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        }
+
+        .start-quiz-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .final-results {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .final-results h2 {
+            color: #64b5f6;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .final-score {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 15px 0;
+            background: linear-gradient(45deg, #4caf50, #8bc34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Optimizări pentru iframe */
+        @media (max-width: 768px) {
+            .theory-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.8em;
+            }
+            
+            .planet-showcase {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+
+        /* Stiluri specifice pentru iframe */
+        html, body {
+            height: 100%;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #2196f3 transparent;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #2196f3;
+            border-radius: 4px;
+        }
+
+        /* Asigură compatibilitatea cu iframe-uri */
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌌 Universul și Sistemul Solar 🚀</h1>
+            <p>Platformă educațională interactivă pentru elevi de liceu</p>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="nav-btn active" onclick="showSection('theory')">📚 Material Teoretic</button>
+            <button class="nav-btn" onclick="showSection('quiz')">🧩 Quiz Interactiv</button>
+            <button class="nav-btn" onclick="showSection('missions')">🚀 Misiuni NASA</button>
+        </div>
+
+        <!-- Secțiunea Teoretică -->
+        <div id="theory" class="content-section active">
+            <h2 style="text-align: center; color: #64b5f6; margin-bottom: 25px;">Material Teoretic Sintetic</h2>
+            
+            <div class="theory-grid">
+                <div class="theory-card">
+                    <h3>🌌 Formarea Universului</h3>
+                    <p><strong>Big Bang:</strong> Universul s-a format acum 13,8 miliarde de ani dintr-o expansiune rapidă a unui punct infinit de dens și fierbinte.</p>
+                    <p><strong>Expansiunea:</strong> Universul continuă să se extindă, galaxiile îndepărtându-se una de alta.</p>
+                    <p><strong>Radiația de fond:</strong> CMB este "ecoul" Big Bang-ului, detectabil astăzi.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🌌 Galaxiile</h3>
+                    <p><strong>Calea Lactee:</strong> Galaxia noastră spirală cu ~100 miliarde de stele.</p>
+                    <p><strong>Tipuri:</strong> Spirale, eliptice, neregulate, lenticulare.</p>
+                    <p><strong>Distanțe:</strong> Măsurate în ani-lumină (distanța parcursă de lumină într-un an).</p>
+                    <p><strong>Vecini:</strong> Andromeda (cea mai apropiată galaxie mare), Norii lui Magellan.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>☀️ Soarele</h3>
+                    <p><strong>Tip:</strong> Stea de secvența principală (pitică galbenă).</p>
+                    <p><strong>Energia:</strong> Fuziunea nucleară (hidrogen → heliu).</p>
+                    <p><strong>Temperaturi:</strong> Nucleu (15 mil. °C), suprafață (5.500°C).</p>
+                    <p><strong>Straturi:</strong> Nucleu, zona radiativă, zona convectivă, fotosfera, cromosfera, coroana.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🪐 Formarea Sistemului Solar</h3>
+                    <p><strong>Vârsta:</strong> 4,6 miliarde de ani.</p>
+                    <p><strong>Originea:</strong> Colapsul unei nebuloase de gaz și praf.</p>
+                    <p><strong>Structura:</strong> 8 planete + planete pitice, asteroizi, comete.</p>
+                    <p><strong>Centura de asteroizi:</strong> Între Marte și Jupiter - Jupiter a împiedicat formarea unei planete.</p>
+                </div>
+            </div>
+
+            <h3 style="text-align: center; color: #64b5f6; margin: 30px 0 15px;">Planetele Sistemului Solar</h3>
+            
+            <div class="planet-showcase">
+                <div class="planet-card">
+                    <div class="planet-image mercury"></div>
+                    <h4>☿ Mercur</h4>
+                    <p>Cea mai apropiată de Soare</p>
+                    <p>Temperaturi extreme: -170°C la 430°C</p>
+                    <p>Zi: 58 zile terestre</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image venus"></div>
+                    <h4>♀ Venus</h4>
+                    <p>"Steaua dimineții"</p>
+                    <p>Atmosferă densă de CO₂</p>
+                    <p>Cea mai fierbinte: 460°C</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image earth"></div>
+                    <h4>🌍 Pământul</h4>
+                    <p>Singura cu viață cunoscută</p>
+                    <p>Atmosferă: 78% N₂, 21% O₂</p>
+                    <p>Distanța de Soare: 150 mil. km</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image mars"></div>
+                    <h4>♂ Marte</h4>
+                    <p>"Planeta roșie"</p>
+                    <p>2 luni: Phobos și Deimos</p>
+                    <p>Cel mai mare vulcan: Olympus Mons</p>
+                    <p>Cel mai mare canion: Valles Marineris</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image jupiter"></div>
+                    <h4>♃ Jupiter</h4>
+                    <p>Cea mai mare planetă</p>
+                    <p>Gigant gazos cu >80 sateliți</p>
+                    <p>Marea Pată Roșie (furtună)</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image saturn"></div>
+                    <h4>♄ Saturn</h4>
+                    <p>Spectaculoase inele de gheață</p>
+                    <p>Densitate < apa</p>
+                    <p>Titan - cel mai mare satelit</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image uranus"></div>
+                    <h4>♅ Uranus</h4>
+                    <p>Se rotește "culcat pe o parte"</p>
+                    <p>Gigant de gheață</p>
+                    <p>Culoare albastră (metan)</p>
+                </div>
+
+                <div class="planet-card">
+                    <div class="planet-image neptune"></div>
+                    <h4>♆ Neptun</h4>
+                    <p>Descoperit prin calcule</p>
+                    <p>Triton - satelit retrograd</p>
+                    <p>Vânturi de 2000 km/h</p>
+                </div>
+            </div>
+
+            <button class="start-quiz-btn" onclick="showSection('quiz')">🚀 Începe Quiz-ul Interactiv!</button>
+        </div>
+
+        <!-- Secțiunea Quiz -->
+        <div id="quiz" class="content-section">
+            <div class="progress-container">
+                <h3>Progresul tău</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="score-display" id="scoreDisplay">Scor: 0/52 (0%)</div>
+            </div>
+
+            <div id="quizContainer" class="quiz-container">
+                <!-- Întrebările vor fi generate dinamic -->
+            </div>
+
+            <div class="final-results" id="finalResults" style="display: none;">
+                <h2>🎉 Felicitări!</h2>
+                <div class="final-score" id="finalScore">0/52</div>
+                <p id="finalMessage"></p>
+                <button class="start-quiz-btn" onclick="restartQuiz()">🔄 Reîncepe Quiz-ul</button>
+            </div>
+        </div>
+
+        <!-- Secțiunea Misiuni NASA -->
+        <div id="missions" class="content-section">
+            <h2 style="text-align: center; color: #64b5f6; margin-bottom: 25px;">🚀 Misiuni NASA în Cercetarea Sistemului Solar</h2>
+            
+            <div class="theory-grid">
+                <div class="theory-card">
+                    <h3>🌞 Explorarea Soarelui</h3>
+                    <p><strong>Parker Solar Probe (2018-prezent):</strong> Prima misiune care "atinge" Soarele, ajungând la doar 6,9 milioane km de suprafața solară. Studiază coroana solară și vântul solar.</p>
+                    <p><strong>Solar Dynamics Observatory (2010-prezent):</strong> Observă activitatea solară în timp real, monitorizând erupțiile solare și câmpurile magnetice.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🔴 Explorarea lui Marte</h3>
+                    <p><strong>Perseverance Rover (2021-prezent):</strong> Caută semne de viață antică și colectează probe de sol pentru viitoarea misiune de returnare pe Pământ.</p>
+                    <p><strong>Curiosity Rover (2012-prezent):</strong> A demonstrat că Marte a avut condiții favorabile vieții în trecut, găsind apă lichidă și materie organică.</p>
+                    <p><strong>Mars Reconnaissance Orbiter (2006-prezent):</strong> Cartografiază Marte în detaliu și studiază schimbările sezoniere.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🪐 Explorarea Planetelor Gigante</h3>
+                    <p><strong>Juno (2016-prezent):</strong> Orbitează Jupiter și studiază structura sa internă, atmosfera și câmpul magnetic. A descoperit că Jupiter are un nucleu "difuz".</p>
+                    <p><strong>Cassini-Huygens (1997-2017):</strong> A studiat Saturn timp de 13 ani, descoperind oceane pe Enceladus și Titan, și misterele inelelor.</p>
+                    <p><strong>Voyager 1 & 2 (1977-prezent):</strong> Au vizitat toate planetele exterioare și acum explorează spațiul interstelar.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🌕 Explorarea Lunii</h3>
+                    <p><strong>Artemis Program (2022-prezent):</strong> Programul actual pentru întoarcerea astronauților pe Lună până în 2026, inclusiv prima femeie.</p>
+                    <p><strong>Lunar Reconnaissance Orbiter (2009-prezent):</strong> Cartografiază Luna în detaliu și caută resurse de apă îngheţată.</p>
+                    <p><strong>Apollo (1969-1972):</strong> 6 misiuni cu echipaj uman pe Lună, aducând 382 kg de roci lunare.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>☄️ Misiuni la Asteroizi și Comete</h3>
+                    <p><strong>OSIRIS-REx (2016-2023):</strong> A colectat probe de pe asteroidul Bennu și le-a returnat pe Pământ în septembrie 2023.</p>
+                    <p><strong>DART (2021-2022):</strong> Prima misiune de apărare planetară - a modificat cu succes orbita asteroidului Dimorphos prin impact.</p>
+                    <p><strong>New Horizons (2006-prezent):</strong> A explorat Pluto (2015) și obiectul Kuiper Belt Arrokoth (2019).</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🛰️ Telescoape Spațiale</h3>
+                    <p><strong>James Webb Space Telescope (2021-prezent):</strong> Cel mai puternic telescop spațial, studiază formarea primelor galaxii și atmosferele exoplanetelor.</p>
+                    <p><strong>Hubble Space Telescope (1990-prezent):</strong> A revoluționat astronomia timp de 30+ ani, descoperind expansiunea accelerată a universului.</p>
+                    <p><strong>Kepler/TESS:</strong> Au descoperit mii de exoplanete, inclusiv planete în "zona locuibilă".</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>💫 Misiuni Viitoare</h3>
+                    <p><strong>Europa Clipper (2024):</strong> Va ajunge la Jupiter în 2030 pentru a studia luna Europa și oceanul său subteran.</p>
+                    <p><strong>Dragonfly (2027):</strong> Un drone care va explora Titan, luna lui Saturn, căutând semne de viață.</p>
+                    <p><strong>Mars Sample Return (2030s):</strong> Va aduce pe Pământ primele probe colectate de Perseverance.</p>
+                </div>
+
+                <div class="theory-card">
+                    <h3>🌍 Misiuni de Observare a Pământului</h3>
+                    <p><strong>Landsat (1972-prezent):</strong> Cel mai longeviv program de observare a Pământului din spațiu, monitorizând schimbările climatice.</p>
+                    <p><strong>GRACE & GRACE-FO:</strong> Măsoară schimbările în câmpul gravitațional al Pământului pentru a studia apa și gheața.</p>
+                    <p><strong>Terra & Aqua:</strong> Monitorizează ecosistemele terestre și oceanice.</p>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 12px; margin: 25px 0; text-align: center;">
+                <h3 style="color: #64b5f6; margin-bottom: 15px;">🏆 Realizări Majore</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin: 15px 0;">
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #81c784;">🌌 Prima misiune interstrelară</h4>
+                        <p>Voyager 1 a ieșit din sistemul solar în 2012</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #81c784;">🔴 Viața pe Marte?</h4>
+                        <p>Descoperirea apei lichide și a materialelor organice</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #81c784;">🌊 Oceane ascunse</h4>
+                        <p>Europa, Enceladus și Titan au oceane subterane</p>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 15px; border-radius: 8px;">
+                        <h4 style="color: #81c784;">🪐 Structura planetelor</h4>
+                        <p>Jupiter are un nucleu difuz, nu solid</p>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: rgba(255, 107, 53, 0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #ff6b35;">
+                <h4 style="color: #ffab91; margin-bottom: 12px;">💡 Știați că...</h4>
+                <ul style="color: #e0e0e0; line-height: 1.6;">
+                    <li>Misiunea Voyager poartă un "Golden Record" cu sunete de pe Pământ pentru eventualele civilizații extraterestre</li>
+                    <li>Rovers-ul Opportunity a funcționat 15 ani pe Marte, deși era planificat pentru doar 90 de zile</li>
+                    <li>Telescopul Hubble parcurge aproximativ 27.000 km/h și face o orbită completă în 95 de minute</li>
+                    <li>NASA planifică să construiască o stație spațială în orbita Lunii (Gateway) ca punct de plecare spre Marte</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Date pentru quiz
+        const quizData = [
+            // Universul și Galaxiile
+            {
+                question: "Conform teoriei Big Bang, universul s-a format acum aproximativ:",
+                options: ["4,6 miliarde de ani", "13,8 miliarde de ani", "10 miliarde de ani", "20 miliarde de ani"],
+                correct: 1,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "Galaxia în care se află sistemul nostru solar se numește:",
+                options: ["Andromeda", "Galaxia Spirală", "Calea Lactee", "Galaxia Eliptică"],
+                correct: 2,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "Tipul de galaxie la care aparține Calea Lactee este:",
+                options: ["Galaxie eliptică", "Galaxie spirală", "Galaxie neregulată", "Galaxie lenticulară"],
+                correct: 1,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "Cea mai apropiată galaxie de Calea Lactee este:",
+                options: ["Galaxia Andromeda", "Galaxia Triunghiului", "Marele Nor al lui Magellan", "Galaxia Centaurus A"],
+                correct: 2,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "Expansiunea universului a fost descoperită de:",
+                options: ["Albert Einstein", "Edwin Hubble", "Galileo Galilei", "Isaac Newton"],
+                correct: 1,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "Radiația cosmică de fond (CMB) este:",
+                options: ["Radiația emisă de stele", "Radiația rămasă de la Big Bang", "Radiația emisă de găurile negre", "Radiația solară"],
+                correct: 1,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "O anul-lumină reprezintă:",
+                options: ["Timpul în care lumina parcurge distanța Pământ-Soare", "Distanța parcursă de lumină într-un an", "Vârsta unei stele", "Viteza luminii"],
+                correct: 1,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "Calea Lactee conține aproximativ:",
+                options: ["100 de milioane de stele", "1 miliard de stele", "100 de miliarde de stele", "1 trilion de stele"],
+                correct: 2,
+                category: "Universul și Galaxiile"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: Dacă universul se extinde continuu de la Big Bang, ce se poate deduce despre densitatea sa în viitor?",
+                options: ["Va rămâne constantă", "Va crește continuu", "Va scădea continuu", "Va oscila periodic"],
+                correct: 2,
+                category: "Universul și Galaxiile",
+                critical: true
+            },
+
+            // Sistemul Solar - Generalități
+            {
+                question: "Sistemul solar s-a format acum aproximativ:",
+                options: ["2,5 miliarde de ani", "4,6 miliarde de ani", "6,5 miliarde de ani", "10 miliarde de ani"],
+                correct: 1,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "Sistemul solar s-a format din:",
+                options: ["Explozia unei stele", "Coliziunea a două planete", "Colapsul unei nebuloase", "Fragmentarea unei comete"],
+                correct: 2,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "Câte planete sunt în sistemul solar?",
+                options: ["7", "8", "9", "10"],
+                correct: 1,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "Planetele telurice (stâncoase) din sistemul solar sunt:",
+                options: ["Mercur, Venus, Pământ, Marte", "Jupiter, Saturn, Uranus, Neptun", "Mercur, Venus, Jupiter, Saturn", "Pământ, Marte, Jupiter, Uranus"],
+                correct: 0,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "Centura de asteroizi se află între:",
+                options: ["Mercur și Venus", "Venus și Pământ", "Pământ și Marte", "Marte și Jupiter"],
+                correct: 3,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "De ce nu s-a format o planetă în centura de asteroizi?",
+                options: ["Temperatura era prea scăzută", "Nu exista suficient material", "Influența gravitațională a lui Jupiter a împiedicat agregarea", "Materialul era prea dens"],
+                correct: 2,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "Cea mai mare planetă din sistemul solar este:",
+                options: ["Saturn", "Jupiter", "Uranus", "Neptun"],
+                correct: 1,
+                category: "Sistemul Solar"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: De ce planetele din sistemul solar intern sunt stâncoase, iar cele externe sunt gazoase?",
+                options: ["Planetele externe sunt mai vechi", "Temperatura scăzută în sistemul extern a permis condensarea gazelor", "Planetele interne au pierdut gazele din cauza căldurii solare", "Ambele b) și c) sunt corecte"],
+                correct: 3,
+                category: "Sistemul Solar",
+                critical: true
+            },
+
+            // Soarele
+            {
+                question: "Soarele este:",
+                options: ["O planetă", "O stea pitică albă", "O stea de secvența principală", "O stea neutronică"],
+                correct: 2,
+                category: "Soarele"
+            },
+            {
+                question: "Sursa de energie a Soarelui este:",
+                options: ["Arderea hidrogenului", "Fuziunea nucleară", "Fisiunea nucleară", "Energia chimică"],
+                correct: 1,
+                category: "Soarele"
+            },
+            {
+                question: "Temperatura din nucleul Soarelui este de aproximativ:",
+                options: ["5.500°C", "1 milion °C", "15 milioane °C", "100 milioane °C"],
+                correct: 2,
+                category: "Soarele"
+            },
+            {
+                question: "Straturile Soarelui, de la interior la exterior, sunt:",
+                options: ["Nucleu, mantaua, coroana", "Nucleu, zona radiativă, zona convectivă, fotosfera, cromosfera, coroana", "Nucleu, atmosfera, coroana", "Interior, fotosfera, exterior"],
+                correct: 1,
+                category: "Soarele"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: Ce s-ar întâmpla cu Pământul dacă Soarele și-ar dubla masa instantaneu?",
+                options: ["Pământul ar fi atras mai aproape de Soare", "Orbita Pământului ar deveni mai eliptică", "Pământul ar fi aruncat în spațiu", "Nu s-ar schimba nimic"],
+                correct: 0,
+                category: "Soarele",
+                critical: true
+            },
+
+            // Mercur
+            {
+                question: "Mercur este:",
+                options: ["Cea mai mare planetă din sistemul solar", "Cea mai apropiată planetă de Soare", "Cea mai îndepărtată planetă de Soare", "Cea mai rece planetă din sistemul solar"],
+                correct: 1,
+                category: "Mercur"
+            },
+            {
+                question: "O zi pe Mercur (rotația în jurul propriei axe) durează:",
+                options: ["24 de ore", "58 de zile terestre", "88 de zile terestre", "243 de zile terestre"],
+                correct: 1,
+                category: "Mercur"
+            },
+            {
+                question: "Temperatura pe Mercur variază între:",
+                options: ["-170°C și 430°C", "-50°C și 200°C", "0°C și 100°C", "100°C și 500°C"],
+                correct: 0,
+                category: "Mercur"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: De ce Mercur, deși este cea mai apropiată planetă de Soare, nu este cea mai fierbinte?",
+                options: ["Mercur reflectă mai multă lumină", "Mercur nu are atmosferă care să rețină căldura", "Mercur se rotește prea rapid", "Mercur este prea mică"],
+                correct: 1,
+                category: "Mercur",
+                critical: true
+            },
+
+            // Venus
+            {
+                question: "Venus este supranumită:",
+                options: ["Planeta roșie", "Planeta galbenă", "Steaua dimineții sau Steaua serii", "Planeta inelelor"],
+                correct: 2,
+                category: "Venus"
+            },
+            {
+                question: "Atmosfera lui Venus este compusă în principal din:",
+                options: ["Oxigen", "Azot", "Dioxid de carbon", "Metan"],
+                correct: 2,
+                category: "Venus"
+            },
+            {
+                question: "Temperatura la suprafața lui Venus este de aproximativ:",
+                options: ["200°C", "350°C", "460°C", "600°C"],
+                correct: 2,
+                category: "Venus"
+            },
+            {
+                question: "Venus se rotește în jurul propriei axe:",
+                options: ["În același sens cu majoritatea planetelor", "În sens retrograd (opus)", "Nu se rotește deloc", "Alternativ în ambele sensuri"],
+                correct: 1,
+                category: "Venus"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: Care este principala cauză pentru care Venus este cea mai fierbinte planetă din sistemul solar?",
+                options: ["Este mai aproape de Soare decât Mercur", "Efectul de seră extrem cauzat de atmosfera densă de CO₂", "Rotația sa lentă", "Lipsa apei de la suprafață"],
+                correct: 1,
+                category: "Venus",
+                critical: true
+            },
+
+            // Pământul
+            {
+                question: "Pământul este singura planetă cunoscută care:",
+                options: ["Are apă", "Are atmosferă", "Susține viața", "Are o lună"],
+                correct: 2,
+                category: "Pământul"
+            },
+            {
+                question: "Atmosfera Pământului este compusă în principal din:",
+                options: ["Oxigen (78%) și azot (21%)", "Azot (78%) și oxigen (21%)", "Dioxid de carbon (78%) și oxigen (21%)", "Oxigen (50%) și azot (50%)"],
+                correct: 1,
+                category: "Pământul"
+            },
+            {
+                question: "Distanța dintre Pământ și Soare este de aproximativ:",
+                options: ["100 milioane km", "150 milioane km", "200 milioane km", "250 milioane km"],
+                correct: 1,
+                category: "Pământul"
+            },
+            {
+                question: "Luna Pământului s-a format probabil prin:",
+                options: ["Capturarea unui asteroid", "Coliziunea cu un obiect de mărimea lui Marte", "Fragmentarea Pământului", "Condensarea din aceeași nebuloză"],
+                correct: 1,
+                category: "Pământul"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: Ce factori fac Pământul apt pentru viață, spre deosebire de Venus sau Marte?",
+                options: ["Doar distanța optimă față de Soare", "Doar prezența apei lichide", "Combinația dintre distanța față de Soare, atmosfera cu efect de seră moderat și câmpul magnetic", "Doar dimensiunea planetei"],
+                correct: 2,
+                category: "Pământul",
+                critical: true
+            },
+
+            // Marte
+            {
+                question: "Marte este supranumit:",
+                options: ["Planeta albastră", "Planeta roșie", "Planeta galbenă", "Planeta verde"],
+                correct: 1,
+                category: "Marte"
+            },
+            {
+                question: "Culoarea roșiatică a lui Marte se datorează:",
+                options: ["Atmosferei dense", "Prezența oxigenului", "Oxidului de fier de la suprafață", "Temperaturii ridicate"],
+                correct: 2,
+                category: "Marte"
+            },
+            {
+                question: "Marte are:",
+                options: ["O lună", "Două luni", "Trei luni", "Nu are luni"],
+                correct: 1,
+                category: "Marte"
+            },
+            {
+                question: "Cele două luni ale lui Marte se numesc:",
+                options: ["Phobos și Deimos", "Titan și Europa", "Io și Ganymede", "Triton și Charon"],
+                correct: 0,
+                category: "Marte"
+            },
+            {
+                question: "Cel mai mare vulcan din sistemul solar se află pe:",
+                options: ["Pământ", "Venus", "Marte", "Jupiter"],
+                correct: 2,
+                category: "Marte"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: De ce oamenii de știință consideră Marte cea mai promițătoare planetă pentru o viitoare colonizare?",
+                options: ["Are cea mai mare asemănare cu Pământul din toate planetele", "Are o zi de 24,6 ore, anotimpuri, apă îngheţată și atmosferă (deși subțire)", "Este cea mai apropiată planetă de Pământ", "Are cea mai deasă atmosferă după Pământ"],
+                correct: 1,
+                category: "Marte",
+                critical: true
+            },
+
+            // Jupiter
+            {
+                question: "Jupiter este:",
+                options: ["O planetă telurică", "O planetă gazoasă", "O planetă pitică", "O stea"],
+                correct: 1,
+                category: "Jupiter"
+            },
+            {
+                question: "Marea Pată Roșie de pe Jupiter este:",
+                options: ["Un crater uriaș", "O furtună gigantica", "Un satelit", "Un ocean"],
+                correct: 1,
+                category: "Jupiter"
+            },
+            {
+                question: "Jupiter are aproximativ:",
+                options: ["20 de sateliti", "40 de sateliti", "60 de sateliti", "Peste 80 de sateliti"],
+                correct: 3,
+                category: "Jupiter"
+            },
+            {
+                question: "Cei mai mari sateliti ai lui Jupiter sunt:",
+                options: ["Phobos, Deimos, Titan, Europa", "Io, Europa, Ganymede, Callisto", "Titan, Enceladus, Mimas, Rhea", "Triton, Charon, Nix, Hydra"],
+                correct: 1,
+                category: "Jupiter"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: Care este rolul lui Jupiter în protejarea planetelor interioare?",
+                options: ["Blochează radiația solară", "Atrage sau deflectează multe comete și asteroizi datorită gravitației puternice", "Încălzește spațiul între planete", "Stabilizează orbitele celorlalte planete"],
+                correct: 1,
+                category: "Jupiter",
+                critical: true
+            },
+
+            // Saturn
+            {
+                question: "Saturn este cunoscut pentru:",
+                options: ["Culoarea sa roșie", "Sistemul său spectacular de inele", "Temperaturile foarte ridicate", "Lipsa satelitilor"],
+                correct: 1,
+                category: "Saturn"
+            },
+            {
+                question: "Inelele lui Saturn sunt compuse în principal din:",
+                options: ["Roci și metal", "Gaze", "Gheață și roci", "Plasmă"],
+                correct: 2,
+                category: "Saturn"
+            },
+            {
+                question: "Cel mai mare satelit al lui Saturn este:",
+                options: ["Europa", "Ganymede", "Titan", "Enceladus"],
+                correct: 2,
+                category: "Saturn"
+            },
+            {
+                question: "Densitatea lui Saturn este:",
+                options: ["Mai mare decât a apei", "Mai mică decât a apei", "Egală cu a apei", "De două ori mai mare decât a apei"],
+                correct: 1,
+                category: "Saturn"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: De ce Saturn are cele mai spectaculoase inele din sistemul solar?",
+                options: ["Este cea mai mare planetă", "Este cea mai îndepărtată planetă gazoasă", "Combinația între dimensiunea sa, poziția în zona cu gheață și interacțiunea gravitațională cu sateliții", "Are cea mai rapidă rotație"],
+                correct: 2,
+                category: "Saturn",
+                critical: true
+            },
+
+            // Uranus și Neptun
+            {
+                question: "Uranus este unic prin faptul că:",
+                options: ["Nu are sateliti", "Se rotește \"culcat pe o parte\"", "Nu are atmosferă", "Este cel mai aproape de Soare"],
+                correct: 1,
+                category: "Uranus și Neptun"
+            },
+            {
+                question: "Culoarea albastră a lui Uranus și Neptun se datorează:",
+                options: ["Apei din atmosferă", "Metanului din atmosferă", "Oxigenului din atmosferă", "Azotului din atmosferă"],
+                correct: 1,
+                category: "Uranus și Neptun"
+            },
+            {
+                question: "Neptun a fost descoperit prin:",
+                options: ["Observații directe cu telescopul", "Calcule matematice bazate pe perturbațiile orbitei lui Uranus", "Fotografii din spațiu", "Întâmplare"],
+                correct: 1,
+                category: "Uranus și Neptun"
+            },
+            {
+                question: "Cel mai mare satelit al lui Neptun este:",
+                options: ["Titan", "Triton", "Charon", "Europa"],
+                correct: 1,
+                category: "Uranus și Neptun"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: De ce Uranus și Neptun sunt numite \"giganți de gheață\" și nu \"giganți gazosi\" ca Jupiter și Saturn?",
+                options: ["Sunt mai reci", "Sunt mai mici", "Conțin proporții mai mari de apă, metan și amoniac îngheţate", "Nu au inele"],
+                correct: 2,
+                category: "Uranus și Neptun",
+                critical: true
+            },
+
+            // Corpuri Cerești Mici
+            {
+                question: "Pluto a fost reclasificat ca:",
+                options: ["Asteroidul", "Cometă", "Planetă pitică", "Satelit"],
+                correct: 2,
+                category: "Corpuri Cerești Mici"
+            },
+            {
+                question: "Cometele provin în principal din:",
+                options: ["Centura de asteroizi", "Norul Oort", "Centura Kuiper", "Ambele b) și c)"],
+                correct: 3,
+                category: "Corpuri Cerești Mici"
+            },
+            {
+                question: "Când o cometă se apropie de Soare:",
+                options: ["Se topește complet", "Dezvoltă o coadă", "Explodează", "Se transformă în asteroid"],
+                correct: 1,
+                category: "Corpuri Cerești Mici"
+            },
+            {
+                question: "Meteoriții sunt:",
+                options: ["Comete mici", "Fragmente de asteroizi care ajung pe Pământ", "Sateliti artificiali", "Particule de praf cosmic"],
+                correct: 1,
+                category: "Corpuri Cerești Mici"
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: De ce asteroidii din centura principală nu au format o planetă?",
+                options: ["Nu au avut suficient timp", "Materialul era prea rareflat", "Forțele de maree ale lui Jupiter au împiedicat agregarea", "Temperatura era prea ridicată"],
+                correct: 2,
+                category: "Corpuri Cerești Mici",
+                critical: true
+            },
+            {
+                question: "GÂNDIRE CRITICĂ: Ce ne învață studiul cometelor despre formarea sistemului solar?",
+                options: ["Sunt resturi nemodificate din nebuloasa primordială", "Conțin doar gheață", "S-au format recent", "Provin de la alte stele"],
+                correct: 0,
+                category: "Corpuri Cerești Mici",
+                critical: true
+            }
+        ];
+
+        // Variabile globale
+        let currentQuestion = 0;
+        let score = 0;
+        let answers = [];
+        let quizStarted = false;
+
+        // Funcții pentru navigare
+        function showSection(sectionName) {
+            // Ascunde toate secțiunile
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afișează secțiunea selectată
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Actualizează butoanele de navigare
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Găsește butonul corect și marchează-l ca activ
+            const buttons = document.querySelectorAll('.nav-btn');
+            if (sectionName === 'theory') buttons[0].classList.add('active');
+            else if (sectionName === 'quiz') buttons[1].classList.add('active');
+            else if (sectionName === 'missions') buttons[2].classList.add('active');
+
+            // Inițializează quiz-ul când se accesează pentru prima dată
+            if (sectionName === 'quiz' && !quizStarted) {
+                initializeQuiz();
+            }
+        }
+
+        // Inițializare quiz
+        function initializeQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = [];
+            quizStarted = true;
+            
+            document.getElementById('finalResults').style.display = 'none';
+            displayQuestion();
+            updateProgress();
+        }
+
+        // Afișare întrebare
+        function displayQuestion() {
+            const container = document.getElementById('quizContainer');
+            const question = quizData[currentQuestion];
+            
+            const questionHTML = `
+                <div class="question ${question.critical ? 'critical-thinking' : ''}">
+                    <h4>Întrebarea ${currentQuestion + 1}/52</h4>
+                    <p><strong>${question.question}</strong></p>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option" onclick="selectOption(${index})" data-index="${index}">
+                                ${String.fromCharCode(97 + index)}) ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="feedback"></div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button id="nextBtn" onclick="nextQuestion()" style="display: none; padding: 10px 20px; background: #4caf50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Următoarea întrebare</button>
+                    </div>
+                </div>
+            `;
+            
+            container.innerHTML = questionHTML;
+        }
+
+        // Selectare opțiune
+        function selectOption(selectedIndex) {
+            const question = quizData[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            const feedback = document.getElementById('feedback');
+            
+            // Dezactivează toate opțiunile
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+            });
+            
+            // Marchează răspunsul selectat
+            options[selectedIndex].classList.add('selected');
+            
+            // Verifică răspunsul
+            const isCorrect = selectedIndex === question.correct;
+            answers.push({
+                question: question.question,
+                selectedAnswer: question.options[selectedIndex],
+                correctAnswer: question.options[question.correct],
+                isCorrect: isCorrect,
+                category: question.category,
+                critical: question.critical || false
+            });
+            
+            if (isCorrect) {
+                score++;
+                options[selectedIndex].classList.add('correct');
+                feedback.innerHTML = '✅ Corect! Foarte bine!';
+                feedback.classList.add('correct', 'show');
+            } else {
+                options[selectedIndex].classList.add('incorrect');
+                options[question.correct].classList.add('correct');
+                feedback.innerHTML = `❌ Incorect. Răspunsul corect este: <strong>${question.options[question.correct]}</strong>`;
+                feedback.classList.add('incorrect', 'show');
+            }
+            
+            // Afișează butonul pentru următoarea întrebare
+            document.getElementById('nextBtn').style.display = 'inline-block';
+            
+            updateProgress();
+        }
+
+        // Următoarea întrebare
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < quizData.length) {
+                displayQuestion();
+            } else {
+                showFinalResults();
+            }
+            
+            updateProgress();
+        }
+
+        // Actualizare progres
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const scoreDisplay = document.getElementById('scoreDisplay');
+            
+            const progress = (currentQuestion / quizData.length) * 100;
+            const percentage = Math.round((score / Math.max(currentQuestion, 1)) * 100);
+            
+            progressFill.style.width = `${progress}%`;
+            scoreDisplay.innerHTML = `Scor: ${score}/${Math.max(currentQuestion, 1)} (${percentage}%)`;
+        }
+
+        // Afișare rezultate finale
+        function showFinalResults() {
+            document.getElementById('quizContainer').style.display = 'none';
+            document.getElementById('finalResults').style.display = 'block';
+            
+            const finalScore = document.getElementById('finalScore');
+            const finalMessage = document.getElementById('finalMessage');
+            const percentage = Math.round((score / quizData.length) * 100);
+            
+            finalScore.innerHTML = `${score}/52 (${percentage}%)`;
+            
+            let message = '';
+            let grade = '';
+            
+            if (percentage >= 90) {
+                grade = '10';
+                message = '🏆 Excelent! Cunoști foarte bine universul și sistemul solar!';
+            } else if (percentage >= 80) {
+                grade = '9';
+                message = '🥇 Foarte bine! Ai cunoștințe solide despre subiect!';
+            } else if (percentage >= 70) {
+                grade = '8';
+                message = '🥈 Bine! Continuă să studiezi pentru a îmbunătăți!';
+            } else if (percentage >= 60) {
+                grade = '7';
+                message = '🥉 Satisfăcător! Mai ai de lucru la unele capitole!';
+            } else if (percentage >= 50) {
+                grade = '6';
+                message = '⚠️ Suficient, dar ai nevoie de mai multă pregătire!';
+            } else {
+                grade = '4-5';
+                message = '📚 Trebuie să studiezi mai mult pentru a stăpâni materia!';
+            }
+            
+            finalMessage.innerHTML = `
+                <div style="font-size: 1.3em; margin: 15px 0;">
+                    <strong>Nota: ${grade}</strong>
+                </div>
+                <p>${message}</p>
+                <div style="margin-top: 15px; font-size: 0.9em;">
+                    <p><strong>Statistici detaliate:</strong></p>
+                    <p>• Întrebări corecte: ${score} din ${quizData.length}</p>
+                    <p>• Întrebări de gândire critică corecte: ${answers.filter(a => a.critical && a.isCorrect).length} din ${answers.filter(a => a.critical).length}</p>
+                </div>
+            `;
+        }
+
+        // Restart quiz
+        function restartQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            answers = [];
+            document.getElementById('quizContainer').style.display = 'block';
+            document.getElementById('finalResults').style.display = 'none';
+            displayQuestion();
+            updateProgress();
+        }
+
+        // Inițializare la încărcarea paginii
+        document.addEventListener('DOMContentLoaded', function() {
+            // Asigură-te că prima secțiune este activă
+            showSection('theory');
+        });
+    </script>
+</body>
+</html>
